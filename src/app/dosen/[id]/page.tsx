@@ -2,8 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, ExternalLink, BookOpen, ChevronDown, ChevronUp, FileText } from "lucide-react";
 import Link from "next/link";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { isPaperRelated } from "@/lib/scoring";
+import { Loading, ErrorState } from "../../components/ui";
 
 interface DosenDetail {
   id: number;
@@ -17,8 +28,16 @@ interface DosenDetail {
   sitasi_sejak_2021: number;
   jumlah_publikasi: number;
   kompetensi: Array<{ bidang: string; tingkat: number }>;
-  tren_sitasi: Array<{ tahun: number; sitasi: number }>;
   publikasi: Array<{ judul: string; tahun: number; sitasi: number; jurnal: string }>;
+  tren_sitasi: Array<{ tahun: number; sitasi: number }>;
+  mata_kuliah: Array<{ id: number; nama: string }>;
+}
+
+function getRelatedPapers(
+  mkName: string,
+  publikasi: Array<{ judul: string; tahun: number; sitasi: number; jurnal: string }>
+) {
+  return publikasi.filter((p) => isPaperRelated(mkName, p.judul));
 }
 
 export default function DosenDetailPage() {
@@ -26,6 +45,7 @@ export default function DosenDetailPage() {
   const id = params.id;
   const [dosen, setDosen] = useState<DosenDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [expandedMatkul, setExpandedMatkul] = useState<number | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -42,13 +62,7 @@ export default function DosenDetailPage() {
     }
   }, [id]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
+  if (loading) return <Loading />;
 
   if (!dosen) {
     return (
@@ -86,9 +100,9 @@ export default function DosenDetailPage() {
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
               {dosen.nama}
             </h1>
-            <p className="text-gray-600 mb-1">📧 {dosen.email}</p>
+            <p className="text-gray-600 mb-1">{dosen.email}</p>
             <p className="text-gray-600 mb-3">
-              📍 Universitas Stikubank, Fakultas Teknologi Informasi dan Industri
+              Universitas Stikubank, Fakultas Teknologi Informasi dan Industri
             </p>
             <div className="flex flex-wrap gap-2 mb-4">
               {dosen.bidang_keahlian.split(",").map((bidang, i) => (
@@ -106,7 +120,7 @@ export default function DosenDetailPage() {
               rel="noopener noreferrer"
               className="inline-flex items-center text-blue-600 hover:text-blue-800"
             >
-              🔬 Google Scholar <ExternalLink className="w-4 h-4 ml-1" />
+              Google Scholar <ExternalLink className="w-4 h-4 ml-1" />
             </a>
           </div>
         </div>
@@ -140,14 +154,109 @@ export default function DosenDetailPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Kompetensi */}
+      {/* Mata Kuliah + Paper Pendukung */}
+      {dosen.mata_kuliah && dosen.mata_kuliah.length > 0 && (
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-indigo-600" />
+            Mata Kuliah yang Diampu
+          </h2>
+          <div className="space-y-2">
+            {dosen.mata_kuliah.map((mk) => {
+              const relatedPapers = getRelatedPapers(mk.nama, dosen.publikasi || []);
+              const isExpanded = expandedMatkul === mk.id;
+
+              return (
+                <div key={mk.id} className="border rounded-lg">
+                  <button
+                    onClick={() =>
+                      setExpandedMatkul(isExpanded ? null : mk.id)
+                    }
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="font-medium text-gray-900">
+                        {mk.nama}
+                      </span>
+                      {relatedPapers.length > 0 && (
+                        <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">
+                          {relatedPapers.length} paper
+                        </span>
+                      )}
+                    </div>
+                    {isExpanded ? (
+                      <ChevronUp className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    )}
+                  </button>
+
+                  {isExpanded && (
+                    <div className="border-t px-4 py-3 bg-gray-50">
+                      {relatedPapers.length > 0 ? (
+                        <div className="space-y-2">
+                          {relatedPapers.map((p, i) => (
+                            <div
+                              key={i}
+                              className="flex items-start gap-3 p-2 bg-white rounded-lg"
+                            >
+                              <FileText className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm text-gray-800">
+                                  {p.judul}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {p.jurnal} &bull; {p.tahun}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-500 py-2">
+                          Belum ada paper yang relevan dengan mata kuliah ini.
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Tren Sitasi Chart */}
+      {dosen.tren_sitasi && dosen.tren_sitasi.length > 0 && (
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">📈 Tren Sitasi per Tahun</h2>
+          <ResponsiveContainer width="100%" height={260}>
+            <LineChart data={dosen.tren_sitasi} margin={{ bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="tahun" />
+              <YAxis />
+              <Tooltip formatter={(v) => [`${v}`, "Sitasi"]} />
+              <Line
+                type="monotone"
+                dataKey="sitasi"
+                stroke="#6366f1"
+                strokeWidth={2}
+                dot={{ r: 4 }}
+                activeDot={{ r: 6 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
+      {/* Kompetensi */}
+      {dosen.kompetensi && dosen.kompetensi.length > 0 && (
         <div className="bg-white rounded-xl shadow-sm p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            🎯 Profil Kompetensi
+            Profil Kompetensi
           </h2>
           <div className="space-y-4">
-            {dosen.kompetensi?.map((k, i) => (
+            {dosen.kompetensi.map((k, i) => (
               <div key={i}>
                 <div className="flex justify-between mb-1">
                   <span className="text-sm font-medium text-gray-700">
@@ -165,77 +274,7 @@ export default function DosenDetailPage() {
             ))}
           </div>
         </div>
-
-        {/* Tren Sitasi */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            📈 Tren Sitasi
-          </h2>
-          {dosen.tren_sitasi && dosen.tren_sitasi.length > 0 ? (
-            <div className="space-y-2">
-              {dosen.tren_sitasi.map((t, i) => {
-                const maxSitasi = Math.max(
-                  ...dosen.tren_sitasi.map((s) => s.sitasi)
-                );
-                const percentage = (t.sitasi / maxSitasi) * 100;
-                return (
-                  <div key={i} className="flex items-center gap-3">
-                    <span className="text-sm text-gray-600 w-12">{t.tahun}</span>
-                    <div className="flex-1 bg-gray-200 rounded-full h-4">
-                      <div
-                        className="bg-gradient-to-r from-green-400 to-blue-500 h-4 rounded-full"
-                        style={{ width: `${percentage}%` }}
-                      ></div>
-                    </div>
-                    <span className="text-sm font-medium text-gray-700 w-12 text-right">
-                      {t.sitasi}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <p className="text-gray-500 text-center py-4">
-              Belum ada data tren sitasi
-            </p>
-          )}
-        </div>
-      </div>
-
-      {/* Publikasi Top */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          📄 Top Publikasi
-        </h2>
-        {dosen.publikasi && dosen.publikasi.length > 0 ? (
-          <div className="space-y-3">
-            {dosen.publikasi.map((p, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-4 p-3 bg-gray-50 rounded-lg"
-              >
-                <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">
-                  {i + 1}
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900">{p.judul}</p>
-                  <p className="text-sm text-gray-500">
-                    {p.jurnal} • {p.tahun}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="font-semibold text-gray-900">{p.sitasi}</p>
-                  <p className="text-xs text-gray-500">sitasi</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-500 text-center py-4">
-            Belum ada data publikasi
-          </p>
-        )}
-      </div>
+      )}
     </div>
   );
 }

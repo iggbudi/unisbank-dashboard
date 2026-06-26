@@ -1,9 +1,5 @@
-// ============================================
-// API Route: GET /api/dosen/[id]
-// ============================================
-
 import { NextResponse } from "next/server";
-import { query, queryOne } from "@/lib/db";
+import { query } from "@/lib/db";
 import type { DosenDetail } from "@/lib/types";
 
 export async function GET(
@@ -21,25 +17,26 @@ export async function GET(
       );
     }
 
-    // Ambil data dosen
-    const dosen = await queryOne<DosenDetail>(
-      `
-      SELECT 
-        d.*,
-        m.total_sitasi,
-        m.h_index,
-        m.i10_index,
-        m.sitasi_sejak_2021,
-        m.h_index_sejak_2021,
-        m.i10_index_sejak_2021,
-        m.jumlah_publikasi
-      FROM dosen d
-      LEFT JOIN metrics_dosen m ON d.id = m.dosen_id
-      WHERE d.id = ?
-      `,
-      [dosenId]
-    );
+    const [dosenRes, kompRes, trenRes, pubRes, mkRes] = await Promise.all([
+      query<DosenDetail>(`
+        SELECT d.*, m.total_sitasi, m.h_index, m.i10_index,
+               m.sitasi_sejak_2021, m.h_index_sejak_2021,
+               m.i10_index_sejak_2021, m.jumlah_publikasi
+        FROM dosen d
+        LEFT JOIN metrics_dosen m ON d.id = m.dosen_id
+        WHERE d.id = ?
+      `, [dosenId]),
+      query("SELECT bidang, tingkat FROM kompetensi_dosen WHERE dosen_id = ?", [dosenId]),
+      query("SELECT tahun, sitasi FROM tren_sitasi WHERE dosen_id = ? ORDER BY tahun ASC", [dosenId]),
+      query("SELECT judul, tahun, sitasi, jurnal, doi, url, is_top FROM publikasi WHERE dosen_id = ? ORDER BY tahun DESC, sitasi DESC", [dosenId]),
+      query(`
+        SELECT mk.id, mk.nama FROM mata_kuliah mk
+        INNER JOIN mapping_dosen_mk m ON mk.id = m.mk_id
+        WHERE m.dosen_id = ? ORDER BY mk.nama
+      `, [dosenId]),
+    ]);
 
+    const dosen = dosenRes[0];
     if (!dosen) {
       return NextResponse.json(
         { success: false, error: "Dosen not found" },
@@ -47,35 +44,18 @@ export async function GET(
       );
     }
 
-    // Ambil kompetensi
-    const kompetensi = await query(
-      "SELECT * FROM kompetensi_dosen WHERE dosen_id = ?",
-      [dosenId]
-    );
-
-    // Ambil tren sitasi
-    const tren_sitasi = await query(
-      "SELECT * FROM tren_sitasi WHERE dosen_id = ? ORDER BY tahun ASC",
-      [dosenId]
-    );
-
-    // Ambil publikasi top
-    const publikasi = await query(
-      "SELECT * FROM publikasi WHERE dosen_id = ? ORDER BY sitasi DESC LIMIT 5",
-      [dosenId]
-    );
-
-    const dosenDetail: DosenDetail = {
-      ...dosen,
-      kompetensi,
-      tren_sitasi,
-      publikasi,
-    };
-
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
-      data: dosenDetail,
+      data: {
+        ...dosen,
+        kompetensi: kompRes,
+        tren_sitasi: trenRes,
+        publikasi: pubRes,
+        mata_kuliah: mkRes,
+      },
     });
+    response.headers.set("Cache-Control", "public, s-maxage=60, stale-while-revalidate=300");
+    return response;
   } catch (error) {
     console.error("Error fetching dosen detail:", error);
     return NextResponse.json(

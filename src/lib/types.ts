@@ -83,6 +83,7 @@ export interface MappingKompetensi {
 export interface DosenWithMetrics extends Dosen {
   metrics?: MetricsDosen;
   kompetensi?: KompetensiDosen[];
+  mata_kuliah?: MataKuliah[];
 }
 
 export interface DosenDetail extends DosenWithMetrics {
@@ -100,19 +101,16 @@ export interface DashboardSummary {
   distribusi_kompetensi: { bidang: string; jumlah: number }[];
 }
 
-// [FUTURE] Types untuk mata kuliah
-// export interface MataKuliah {
-//   id: number;
-//   kode: string;
-//   nama: string;
-//   sks: number;
-//   semester: number;
-//   jenis: 'wajib' | 'pilihan';
-// }
+// Mata Kuliah
+export interface MataKuliah {
+  id: number;
+  nama: string;
+  ps_id: number;
+}
 
-// export interface MappingDosenMK {
-//   id: number;
-//   dosen_id: number;
-//   mk_id: number;
-//   tahun_akademik: string;
-// }
+// Mapping Dosen - Mata Kuliah
+export interface MappingDosenMK {
+  id: number;
+  dosen_id: number;
+  mk_id: number;
+}

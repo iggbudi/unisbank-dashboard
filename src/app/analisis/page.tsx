@@ -1,248 +1,445 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle, AlertCircle, XCircle } from "lucide-react";
+import { CheckCircle, AlertCircle, XCircle, ChevronDown, ChevronUp, Info } from "lucide-react";
+import { Loading, ErrorState } from "../components/ui";
 
-interface KompetensiItem {
-  bidang: string;
-  jumlah: number;
+interface ScoreBreakdown {
+  keyword: number;
+  sinonim: number;
+  domain: number;
+  kompetensi: number;
+  publikasi: number;
+  total: number;
 }
 
-interface VisiMisi {
-  kompetensi_dibutuhkan: string[];
-  kesesuaian: { bidang: string; skor: number; status: string }[];
+interface MatkulDetail {
+  matkul: string;
+  score: number;
+  breakdown: ScoreBreakdown;
+  matchedPapers: string[];
+  matchedDomains: string[];
+}
+
+interface DosenAlignment {
+  id: number;
+  nama: string;
+  totalScore: number;
+  matkulCount: number;
+  avgScore: number;
+  details: MatkulDetail[];
+}
+
+interface MatkulAlignment {
+  id: number;
+  nama: string;
+  avgScore: number;
+  dosenCount: number;
+  scores: number[];
+}
+
+interface FormulaFactor {
+  name: string;
+  max: number;
+  desc: string;
+}
+
+interface AlignmentData {
+  overallAvg: number;
+  formula: { description: string; factors: FormulaFactor[] };
+  dosen: DosenAlignment[];
+  mataKuliah: MatkulAlignment[];
+  matrix: Record<number, Record<number, number>>;
+  breakdown: Record<number, Record<number, ScoreBreakdown>>;
+}
+
+const FACTOR_COLORS: Record<string, string> = {
+  paper_relevance: "bg-blue-500",
+  kompetensi_bonus: "bg-orange-500",
+  depth: "bg-pink-500",
+};
+
+const FACTOR_LABELS: Record<string, string> = {
+  paper_relevance: "Paper Relevance",
+  kompetensi_bonus: "Kompetensi",
+  depth: "Depth",
+};
+
+function scoreColor(score: number): string {
+  if (score >= 70) return "bg-green-500";
+  if (score >= 40) return "bg-yellow-500";
+  if (score > 0) return "bg-red-400";
+  return "bg-gray-100";
+}
+
+function scoreTextColor(score: number): string {
+  if (score >= 70) return "text-green-700";
+  if (score >= 40) return "text-yellow-700";
+  if (score > 0) return "text-red-600";
+  return "text-gray-400";
+}
+
+function scoreBg(score: number): string {
+  if (score >= 70) return "bg-green-50";
+  if (score >= 40) return "bg-yellow-50";
+  if (score > 0) return "bg-red-50";
+  return "bg-gray-50";
+}
+
+function StatusBadge({ score }: { score: number }) {
+  if (score >= 70)
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">
+        <CheckCircle className="w-3 h-3" /> Sesuai
+      </span>
+    );
+  if (score >= 40)
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full font-medium">
+        <AlertCircle className="w-3 h-3" /> Cukup
+      </span>
+    );
+  return (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-red-100 text-red-600 text-xs rounded-full font-medium">
+      <XCircle className="w-3 h-3" /> Kurang
+    </span>
+  );
+}
+
+function BreakdownBar({ breakdown }: { breakdown: ScoreBreakdown }) {
+  const factors = [
+    { key: "paper_relevance", value: breakdown.keyword, max: 70 },
+    { key: "kompetensi_bonus", value: breakdown.kompetensi, max: 20 },
+    { key: "depth", value: breakdown.publikasi, max: 10 },
+  ] as const;
+
+  return (
+    <div className="flex items-center gap-1">
+      {factors.map((f) => (
+        <div key={f.key} className="flex items-center gap-0.5" title={`${FACTOR_LABELS[f.key]}: ${f.value}/${f.max}`}>
+          <div
+            className={`h-3 rounded-sm ${FACTOR_COLORS[f.key]} opacity-80`}
+            style={{ width: `${(f.value / f.max) * 40}px`, minWidth: f.value > 0 ? "3px" : "0" }}
+          ></div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export default function AnalisisPage() {
-  const [kompetensi, setKompetensi] = useState<KompetensiItem[]>([]);
+  const [data, setData] = useState<AlignmentData | null>(null);
   const [loading, setLoading] = useState(true);
-
-  // Mapping kompetensi vs visi-misi PS
-  const visiMisiMapping: VisiMisi = {
-    kompetensi_dibutuhkan: [
-      "Pengembangan Sistem Informasi",
-      "Analisis Data",
-      "Web Development",
-      "Mobile Development",
-      "Machine Learning",
-      "Database",
-      "IT Governance",
-      "E-Commerce",
-      "Digital Marketing",
-      "Kriptografi",
-      "Networking",
-      "AI",
-    ],
-    kesesuaian: [],
-  };
+  const [expandedDosen, setExpandedDosen] = useState<number | null>(null);
+  const [sortBy, setSortBy] = useState<"nama" | "score">("score");
+  const [showFormula, setShowFormula] = useState(false);
 
   useEffect(() => {
-    fetch("/api/summary")
+    fetch("/api/alignment")
       .then((res) => res.json())
-      .then((data) => {
-        setKompetensi(data.data.distribusi_kompetensi || []);
+      .then((res) => {
+        setData(res.data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
   }, []);
 
-  // Hitung kesesuaian
-  const hitungKesesuaian = () => {
-    return visiMisiMapping.kompetensi_dibutuhkan.map((kd) => {
-      const found = kompetensi.find(
-        (k) =>
-          k.bidang.toLowerCase().includes(kd.toLowerCase()) ||
-          kd.toLowerCase().includes(k.bidang.toLowerCase())
-      );
-      const skor = found ? Math.min((found.jumlah / 3) * 100, 100) : 0;
-      const status =
-        skor >= 70 ? "Sangat Sesuai" : skor >= 40 ? "Sesuai" : "Perlu Dikembangkan";
-      return { bidang: kd, skor: Math.round(skor), status };
-    });
-  };
+  if (loading) return <Loading text="Menghitung kesesuaian paper-matkul..." />;
 
-  const kesesuaian = hitungKesesuaian();
-  const rataRataSkor = Math.round(
-    kesesuaian.reduce((a, b) => a + b.skor, 0) / kesesuaian.length
-  );
+  if (!data) return <ErrorState onRetry={() => window.location.reload()} />;
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
+  const sortedDosen =
+    sortBy === "score"
+      ? [...data.dosen].sort((a, b) => b.avgScore - a.avgScore)
+      : [...data.dosen].sort((a, b) => a.nama.localeCompare(b.nama));
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900">
-          🎯 Analisis Kesesuaian
+          Analisis Kesesuaian Paper & Mata Kuliah
         </h1>
         <p className="text-gray-600">
-          Kesesuaian Kompetensi Dosen dengan Visi-Misi Prodi SI
+          Matrix kesesuaian antara publikasi penelitian dan mata kuliah yang
+          diampu dosen
         </p>
       </div>
 
-      {/* Skor Keseluruhan */}
-      <div className="bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl p-6 text-white">
+      {/* Overall Score */}
+      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 text-white">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold mb-1">Skor Kesesuaian Keseluruhan</h2>
-            <p className="text-green-100">
-              Berdasarkan {kompetensi.length} kompetensi yang tersedia
+            <h2 className="text-xl font-bold mb-1">
+              Skor Kesesuaian Keseluruhan
+            </h2>
+            <p className="text-indigo-200">
+              {data.dosen.length} dosen &times; {data.mataKuliah.length} mata
+              kuliah
             </p>
           </div>
           <div className="text-center">
-            <p className="text-5xl font-bold">{rataRataSkor}%</p>
-            <p className="text-green-100">
-              {rataRataSkor >= 70 ? "Sangat Sesuai" : rataRataSkor >= 40 ? "Sesuai" : "Perlu Dikembangkan"}
-            </p>
+            <p className="text-5xl font-bold">{data.overallAvg}%</p>
+            <StatusBadge score={data.overallAvg} />
           </div>
         </div>
       </div>
 
-      {/* Matriks Kesesuaian */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
+      {/* Formula */}
+      <div className="bg-white rounded-xl shadow-sm">
+        <button
+          onClick={() => setShowFormula(!showFormula)}
+          className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition"
+        >
+          <div className="flex items-center gap-2">
+            <Info className="w-5 h-5 text-blue-600" />
+            <span className="font-semibold text-gray-900">Formula Perhitungan</span>
+          </div>
+          {showFormula ? (
+            <ChevronUp className="w-5 h-5 text-gray-400" />
+          ) : (
+            <ChevronDown className="w-5 h-5 text-gray-400" />
+          )}
+        </button>
+        {showFormula && (
+          <div className="border-t p-4">
+            <p className="font-mono text-sm bg-gray-100 p-3 rounded-lg mb-4 text-gray-800">
+              {data.formula.description}
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+              {data.formula.factors.map((f) => (
+                <div key={f.name} className="p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className={`w-3 h-3 rounded ${FACTOR_COLORS[f.name]}`}></div>
+                    <span className="font-semibold text-sm capitalize">{f.name}</span>
+                    <span className="text-xs text-gray-500">(max {f.max})</span>
+                  </div>
+                  <p className="text-xs text-gray-600">{f.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Legend */}
+      <div className="bg-white rounded-xl shadow-sm p-4">
+        <div className="flex flex-wrap items-center gap-6 text-sm">
+          <span className="font-medium text-gray-700">Keterangan Skor:</span>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded bg-green-500"></div>
+            <span className="text-gray-600">70-100 = Sesuai</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded bg-yellow-500"></div>
+            <span className="text-gray-600">40-69 = Cukup</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded bg-red-400"></div>
+            <span className="text-gray-600">1-39 = Kurang</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded bg-gray-100 border"></div>
+            <span className="text-gray-600">0 = Tidak ada data</span>
+          </div>
+          <span className="text-gray-400">|</span>
+          {Object.entries(FACTOR_LABELS).map(([key, label]) => (
+            <div key={key} className="flex items-center gap-1">
+              <div className={`w-3 h-3 rounded ${FACTOR_COLORS[key]}`}></div>
+              <span className="text-gray-600 text-xs">{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Matrix Table */}
+      <div className="bg-white rounded-xl shadow-sm p-6 overflow-x-auto">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          📊 Matriks Kesesuaian Kompetensi vs Visi-Misi PS
+          Matrix Dosen &times; Mata Kuliah
         </h2>
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <div className="overflow-x-auto -mx-6 px-6">
+          <table className="border-collapse text-xs min-w-full">
             <thead>
-              <tr className="border-b">
-                <th className="text-left py-3 px-4 font-semibold text-gray-700">
-                  Kompetensi yang Dibutuhkan
+              <tr>
+                <th className="sticky left-0 bg-white z-20 p-2 text-left font-semibold text-gray-700 border-b min-w-[140px] shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]">
+                  Dosen
                 </th>
-                <th className="text-center py-3 px-4 font-semibold text-gray-700">
-                  Skor
-                </th>
-                <th className="text-center py-3 px-4 font-semibold text-gray-700">
-                  Status
-                </th>
-                <th className="text-center py-3 px-4 font-semibold text-gray-700">
-                  Visual
+                {data.mataKuliah.map((mk) => (
+                  <th
+                    key={mk.id}
+                    className="p-1 font-medium text-gray-600 border-b min-w-[70px]"
+                  >
+                    <div className="writing-vertical h-[120px] flex items-end justify-center">
+                      <span className="[writing-mode:vertical-rl] rotate-180 text-[11px] leading-tight">
+                        {mk.nama}
+                      </span>
+                    </div>
+                  </th>
+                ))}
+                <th className="p-2 font-semibold text-gray-700 border-b min-w-[56px]">
+                  Rata-rata
                 </th>
               </tr>
             </thead>
             <tbody>
-              {kesesuaian.map((item, i) => (
-                <tr key={i} className="border-b hover:bg-gray-50">
-                  <td className="py-3 px-4 text-gray-800">{item.bidang}</td>
-                  <td className="py-3 px-4 text-center font-semibold">
-                    {item.skor}%
+              {sortedDosen.map((dosen) => (
+                <tr key={dosen.id} className="hover:bg-gray-50">
+                  <td className="sticky left-0 bg-white z-10 p-2 border-b font-medium text-gray-800 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]">
+                    <span className="text-xs">{dosen.nama}</span>
                   </td>
-                  <td className="py-3 px-4 text-center">
-                    <span
-                      className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${
-                        item.status === "Sangat Sesuai"
-                          ? "bg-green-100 text-green-700"
-                          : item.status === "Sesuai"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
+                {data.mataKuliah.map((mk) => {
+                  const score = data.matrix[dosen.id]?.[mk.id] ?? 0;
+                  return (
+                    <td
+                      key={mk.id}
+                      className={`p-1 border-b text-center ${scoreBg(score)}`}
                     >
-                      {item.status === "Sangat Sesuai" && (
-                        <CheckCircle className="w-4 h-4" />
+                      {score > 0 ? (
+                        <span
+                          className={`font-bold ${scoreTextColor(score)}`}
+                          title={`${dosen.nama} → ${mk.nama}: ${score}%`}
+                        >
+                          {score}
+                        </span>
+                      ) : (
+                        <span className="text-gray-300">-</span>
                       )}
-                      {item.status === "Sesuai" && (
-                        <AlertCircle className="w-4 h-4" />
-                      )}
-                      {item.status === "Perlu Dikembangkan" && (
-                        <XCircle className="w-4 h-4" />
-                      )}
-                      {item.status}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4">
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className={`h-2 rounded-full ${
-                          item.skor >= 70
-                            ? "bg-green-500"
-                            : item.skor >= 40
-                            ? "bg-yellow-500"
-                            : "bg-red-500"
-                        }`}
-                        style={{ width: `${item.skor}%` }}
-                      ></div>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+                    </td>
+                  );
+                })}
+                <td
+                  className={`p-2 border-b text-center font-bold ${scoreTextColor(dosen.avgScore)}`}
+                >
+                  {dosen.avgScore}%
+                </td>
+              </tr>
+            ))}
+          </tbody>
           </table>
         </div>
       </div>
 
-      {/* Legend */}
+      {/* Per-Dosen Detail */}
       <div className="bg-white rounded-xl shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          📋 Keterangan
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
-            <CheckCircle className="w-6 h-6 text-green-600" />
-            <div>
-              <p className="font-medium text-green-800">Sangat Sesuai (≥70%)</p>
-              <p className="text-sm text-green-600">
-                Kompetensi sudah terpenuhi dengan baik
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 p-3 bg-yellow-50 rounded-lg">
-            <AlertCircle className="w-6 h-6 text-yellow-600" />
-            <div>
-              <p className="font-medium text-yellow-800">Sesuai (40-69%)</p>
-              <p className="text-sm text-yellow-600">
-                Kompetensi cukup, perlu penguatan
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg">
-            <XCircle className="w-6 h-6 text-red-600" />
-            <div>
-              <p className="font-medium text-red-800">
-                Perlu Dikembangkan (&lt;40%)
-              </p>
-              <p className="text-sm text-red-600">
-                Kompetensi perlu ditambah/dikembangkan
-              </p>
-            </div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Detail per Dosen
+          </h2>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setSortBy("score")}
+              className={`px-3 py-1 text-sm rounded-lg ${
+                sortBy === "score"
+                  ? "bg-blue-100 text-blue-700"
+                  : "bg-gray-100 text-gray-600"
+              }`}
+            >
+              Urut Skor
+            </button>
+            <button
+              onClick={() => setSortBy("nama")}
+              className={`px-3 py-1 text-sm rounded-lg ${
+                sortBy === "nama"
+                  ? "bg-blue-100 text-blue-700"
+                  : "bg-gray-100 text-gray-600"
+              }`}
+            >
+              Urut Nama
+            </button>
           </div>
         </div>
-      </div>
 
-      {/* Rekomendasi */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          💡 Rekomendasi
-        </h2>
         <div className="space-y-3">
-          {kesesuaian
-            .filter((k) => k.skor < 70)
-            .map((item, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500"
+          {sortedDosen.map((dosen) => (
+            <div key={dosen.id} className="border rounded-lg">
+              <button
+                onClick={() =>
+                  setExpandedDosen(
+                    expandedDosen === dosen.id ? null : dosen.id
+                  )
+                }
+                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition"
               >
-                <span className="text-blue-600 font-bold">⚡</span>
-                <div>
-                  <p className="font-medium text-gray-800">{item.bidang}</p>
-                  <p className="text-sm text-gray-600">
-                    Skor saat ini {item.skor}%. Perlu penambahan dosen dengan
-                    kompetensi di bidang ini atau pelatihan untuk dosen yang ada.
-                  </p>
+                <div className="flex items-center gap-4">
+                  <div
+                    className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm ${
+                      dosen.avgScore >= 70
+                        ? "bg-green-500"
+                        : dosen.avgScore >= 40
+                        ? "bg-yellow-500"
+                        : "bg-red-400"
+                    }`}
+                  >
+                    {dosen.avgScore}
+                  </div>
+                  <div className="text-left">
+                    <p className="font-medium text-gray-900">{dosen.nama}</p>
+                    <p className="text-sm text-gray-500">
+                      {dosen.matkulCount} mata kuliah &bull; Rata-rata{" "}
+                      {dosen.avgScore}%
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          {kesesuaian.filter((k) => k.skor < 70).length === 0 && (
-            <div className="text-center py-4 text-green-600">
-              ✅ Semua kompetensi sudah sesuai dengan visi-misi!
+                {expandedDosen === dosen.id ? (
+                  <ChevronUp className="w-5 h-5 text-gray-400" />
+                ) : (
+                  <ChevronDown className="w-5 h-5 text-gray-400" />
+                )}
+              </button>
+
+              {expandedDosen === dosen.id && (
+                <div className="border-t p-4 bg-gray-50">
+                  <div className="space-y-2">
+                    {dosen.details
+                      .sort((a, b) => b.score - a.score)
+                      .map((d, i) => (
+                        <div
+                          key={i}
+                          className="p-3 bg-white rounded-lg border"
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-3">
+                              <div
+                                className={`w-8 h-8 rounded flex items-center justify-center text-white font-bold text-xs ${scoreColor(d.score)}`}
+                              >
+                                {d.score}
+                              </div>
+                              <div>
+                                <p className="font-medium text-gray-800 text-sm">
+                                  {d.matkul}
+                                </p>
+                                {d.matchedDomains.length > 0 && (
+                                  <p className="text-xs text-gray-500">
+                                    Domain: {d.matchedDomains.join(", ")}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            <StatusBadge score={d.score} />
+                          </div>
+
+                          {/* Breakdown bar */}
+                          <div className="flex items-center gap-2 mb-1">
+                            <BreakdownBar breakdown={d.breakdown} />
+                            <span className="text-xs text-gray-500">
+                              Paper:{d.breakdown.keyword} Kompetensi:{d.breakdown.kompetensi} Depth:{d.breakdown.publikasi}
+                            </span>
+                          </div>
+
+                          {d.matchedPapers.length > 0 && (
+                            <p className="text-xs text-gray-500 mt-1 truncate">
+                              Paper: {d.matchedPapers.slice(0, 2).join(", ")}
+                              {d.matchedPapers.length > 2 &&
+                                ` +${d.matchedPapers.length - 2} lagi`}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+          ))}
         </div>
       </div>
     </div>

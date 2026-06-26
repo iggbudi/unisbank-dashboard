@@ -89,28 +89,25 @@ CREATE TABLE IF NOT EXISTS mapping_kompetensi (
   bobot INTEGER DEFAULT 1
 );
 
--- [FUTURE] Mata Kuliah
--- CREATE TABLE IF NOT EXISTS mata_kuliah (
---   id INTEGER PRIMARY KEY AUTOINCREMENT,
---   kode TEXT NOT NULL UNIQUE,
---   nama TEXT NOT NULL,
---   sks INTEGER,
---   semester INTEGER,
---   jenis TEXT CHECK(jenis IN ('wajib', 'pilihan')),
---   ps_id INTEGER REFERENCES program_studi(id)
--- );
+-- Mata Kuliah
+CREATE TABLE IF NOT EXISTS mata_kuliah (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nama TEXT NOT NULL UNIQUE,
+  ps_id INTEGER DEFAULT 1 REFERENCES program_studi(id)
+);
 
--- [FUTURE] Mapping Dosen - Mata Kuliah
--- CREATE TABLE IF NOT EXISTS mapping_dosen_mk (
---   id INTEGER PRIMARY KEY AUTOINCREMENT,
---   dosen_id INTEGER REFERENCES dosen(id),
---   mk_id INTEGER REFERENCES mata_kuliah(id),
---   tahun_akademik TEXT,
---   UNIQUE(dosen_id, mk_id, tahun_akademik)
--- );
+-- Mapping Dosen - Mata Kuliah
+CREATE TABLE IF NOT EXISTS mapping_dosen_mk (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  dosen_id INTEGER REFERENCES dosen(id) ON DELETE CASCADE,
+  mk_id INTEGER REFERENCES mata_kuliah(id) ON DELETE CASCADE,
+  UNIQUE(dosen_id, mk_id)
+);
 
 -- Indexes untuk performa
 CREATE INDEX IF NOT EXISTS idx_kompetensi_dosen_id ON kompetensi_dosen(dosen_id);
 CREATE INDEX IF NOT EXISTS idx_tren_sitasi_dosen_id ON tren_sitasi(dosen_id);
 CREATE INDEX IF NOT EXISTS idx_publikasi_dosen_id ON publikasi(dosen_id);
 CREATE INDEX IF NOT EXISTS idx_metrics_dosen_id ON metrics_dosen(dosen_id);
+CREATE INDEX IF NOT EXISTS idx_mapping_dosen_mk_dosen ON mapping_dosen_mk(dosen_id);
+CREATE INDEX IF NOT EXISTS idx_mapping_dosen_mk_mk ON mapping_dosen_mk(mk_id);
