@@ -87,8 +87,8 @@ export default function DosenDetailPage() {
       </Link>
 
       {/* Profile Header */}
-      <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
-        <div className="flex flex-col md:flex-row items-start gap-3 sm:gap-4 sm:p-6">
+      <div className="bg-white rounded-xl shadow-sm p-2 sm:p-4 sm:p-6">
+        <div className="flex flex-col md:flex-row items-start gap-3 sm:gap-2 sm:gap-2 sm:p-4 sm:p-6">
           <div className="w-24 h-24 bg-gradient-to-br from-[#800000] to-[#4a0000] rounded-full flex items-center justify-center text-white font-bold text-3xl flex-shrink-0">
             {dosen.nama
               .split(" ")
@@ -97,7 +97,7 @@ export default function DosenDetailPage() {
               .slice(0, 2)}
           </div>
           <div className="flex-1">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-base sm:text-2xl font-bold text-gray-900 mb-2">
               {dosen.nama}
             </h1>
             <p className="text-gray-600 mb-1">{dosen.email}</p>
@@ -108,7 +108,7 @@ export default function DosenDetailPage() {
               {dosen.bidang_keahlian.split(",").map((bidang, i) => (
                 <span
                   key={i}
-                  className="px-3 py-1 bg-red-100 text-[#800000] text-sm rounded-full"
+                  className="px-2 py-0.5 sm:px-3 sm:py-1 bg-red-100 text-[#800000] text-xs sm:text-sm rounded-full"
                 >
                   {bidang.trim()}
                 </span>
@@ -118,7 +118,7 @@ export default function DosenDetailPage() {
               href={`https://scholar.google.co.id/citations?user=${dosen.google_scholar_id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center text-[#800000] hover:text-blue-800"
+              className="inline-flex items-center text-[#800000] hover:text-[#5c0000]"
             >
               Google Scholar <ExternalLink className="w-4 h-4 ml-1" />
             </a>
@@ -127,36 +127,36 @@ export default function DosenDetailPage() {
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl shadow-sm p-4 text-center">
-          <p className="text-3xl font-bold text-[#800000]">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-2 sm:p-4">
+        <div className="bg-white rounded-xl shadow-sm p-2 sm:p-4 text-center">
+          <p className="text-xl sm:text-3xl font-bold text-[#800000]">
             {dosen.total_sitasi?.toLocaleString() || 0}
           </p>
-          <p className="text-sm text-gray-500">Total Sitasi</p>
+          <p className="text-xs sm:text-sm text-gray-500">Total Sitasi</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-4 text-center">
-          <p className="text-3xl font-bold text-[#800000]">
+        <div className="bg-white rounded-xl shadow-sm p-2 sm:p-4 text-center">
+          <p className="text-xl sm:text-3xl font-bold text-[#800000]">
             {dosen.h_index || 0}
           </p>
-          <p className="text-sm text-gray-500">h-index</p>
+          <p className="text-xs sm:text-sm text-gray-500">h-index</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-4 text-center">
-          <p className="text-3xl font-bold text-green-600">
+        <div className="bg-white rounded-xl shadow-sm p-2 sm:p-4 text-center">
+          <p className="text-xl sm:text-3xl font-bold text-green-600">
             {dosen.i10_index || 0}
           </p>
-          <p className="text-sm text-gray-500">i10-index</p>
+          <p className="text-xs sm:text-sm text-gray-500">i10-index</p>
         </div>
-        <div className="bg-white rounded-xl shadow-sm p-4 text-center">
-          <p className="text-3xl font-bold text-orange-600">
+        <div className="bg-white rounded-xl shadow-sm p-2 sm:p-4 text-center">
+          <p className="text-xl sm:text-3xl font-bold text-orange-600">
             {dosen.jumlah_publikasi || 0}
           </p>
-          <p className="text-sm text-gray-500">Publikasi</p>
+          <p className="text-xs sm:text-sm text-gray-500">Publikasi</p>
         </div>
       </div>
 
       {/* Mata Kuliah + Paper Pendukung */}
       {dosen.mata_kuliah && dosen.mata_kuliah.length > 0 && (
-        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+        <div className="bg-white rounded-xl shadow-sm p-2 sm:p-4 sm:p-6">
           <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-indigo-600" />
             Mata Kuliah yang Diampu
@@ -213,7 +213,7 @@ export default function DosenDetailPage() {
                           ))}
                         </div>
                       ) : (
-                        <p className="text-sm text-gray-500 py-2">
+                        <p className="text-xs sm:text-sm text-gray-500 py-2">
                           Belum ada paper yang relevan dengan mata kuliah ini.
                         </p>
                       )}
@@ -228,7 +228,7 @@ export default function DosenDetailPage() {
 
       {/* Tren Sitasi Chart */}
       {dosen.tren_sitasi && dosen.tren_sitasi.length > 0 && (
-        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+        <div className="bg-white rounded-xl shadow-sm p-2 sm:p-4 sm:p-6">
           <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">📈 Tren Sitasi per Tahun</h2>
           <ResponsiveContainer width="100%" height="100%" className="!h-[180px] sm:!h-[260px]">
             <LineChart data={dosen.tren_sitasi} margin={{ bottom: 5 }}>
@@ -251,7 +251,7 @@ export default function DosenDetailPage() {
 
       {/* Kompetensi */}
       {dosen.kompetensi && dosen.kompetensi.length > 0 && (
-        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+        <div className="bg-white rounded-xl shadow-sm p-2 sm:p-4 sm:p-6">
           <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">
             Profil Kompetensi
           </h2>
@@ -262,7 +262,7 @@ export default function DosenDetailPage() {
                   <span className="text-sm font-medium text-gray-700">
                     {k.bidang}
                   </span>
-                  <span className="text-sm text-gray-500">{k.tingkat}%</span>
+                  <span className="text-xs sm:text-sm text-gray-500">{k.tingkat}%</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div
