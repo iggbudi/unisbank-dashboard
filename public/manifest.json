@@ -1,0 +1,24 @@
+{
+  "name": "Dashboard Prodi SI - Unisbank",
+  "short_name": "Prodi SI",
+  "description": "Dashboard kompetensi dosen Program Studi Sistem Informasi Universitas Stikubank",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#800000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

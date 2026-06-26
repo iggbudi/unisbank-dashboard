@@ -21,6 +21,10 @@ export default function RootLayout({
         <title>Dashboard Prodi SI - Universitas Stikubank</title>
         <meta name="description" content="Dashboard analisis kompetensi dosen Program Studi Sistem Informasi Universitas Stikubank" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#800000" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/icons/icon-192.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
       </head>
       <body className={inter.className}>
         <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -76,6 +80,13 @@ export default function RootLayout({
             </div>
           </footer>
         </div>
+        <script dangerouslySetInnerHTML={{ __html: `
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+              navigator.serviceWorker.register('/sw.js');
+            });
+          }
+        `}} />
       </body>
     </html>
   );
