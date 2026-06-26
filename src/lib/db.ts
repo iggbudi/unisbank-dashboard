@@ -35,9 +35,9 @@ export async function queryOne<T = any>(
 export async function execute(
   sql: string,
   args?: any[]
-): Promise<void> {
+): Promise<any> {
   const db = getClient();
-  await db.execute({ sql, args: args || [] });
+  return db.execute({ sql, args: args || [] });
 }
 
 export async function executeBatch(
