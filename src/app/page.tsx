@@ -168,8 +168,8 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Quick Actions — 3 kolom di mobile */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-4">
+      {/* Quick Actions — desktop only */}
+      <div className="hidden sm:grid grid-cols-3 gap-4">
         <Link href="/dosen" className="p-2 sm:p-4 border border-gray-200 rounded-xl hover:border-[#800000] hover:bg-red-50 transition-all text-center">
           <Users className="w-5 h-5 sm:w-8 sm:h-8 text-[#800000] mx-auto mb-1 sm:mb-2" />
           <p className="text-[10px] sm:text-sm font-medium text-gray-900">Dosen</p>
