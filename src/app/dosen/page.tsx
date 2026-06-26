@@ -114,7 +114,7 @@ export default function DosenPage() {
             placeholder="Cari nama, bidang, mata kuliah..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+            className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none"
           />
         </div>
 
@@ -123,7 +123,7 @@ export default function DosenPage() {
           <select
             value={bidangFilter}
             onChange={(e) => setBidangFilter(e.target.value)}
-            className="pl-9 pr-8 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm appearance-none cursor-pointer"
+            className="pl-9 pr-8 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none text-sm appearance-none cursor-pointer"
           >
             <option value="">Semua Bidang</option>
             {allBidang.map((b) => (
@@ -135,7 +135,7 @@ export default function DosenPage() {
         <select
           value={sortKey}
           onChange={(e) => setSortKey(e.target.value as SortKey)}
-          className="px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm appearance-none cursor-pointer"
+          className="px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#800000] focus:border-transparent outline-none text-sm appearance-none cursor-pointer"
         >
           <option value="sitasi">Urut: Sitasi</option>
           <option value="h_index">Urut: h-index</option>
@@ -162,13 +162,13 @@ export default function DosenPage() {
               className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-4 sm:p-6 group"
             >
               <div className="flex items-start justify-between mb-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white font-bold text-lg">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#800000] to-[#4a0000] rounded-xl flex items-center justify-center text-white font-bold text-lg">
                   {dosen.nama.charAt(0)}
                 </div>
-                <ArrowRight className="w-5 h-5 text-gray-300 group-hover:text-blue-500 transition-colors" />
+                <ArrowRight className="w-5 h-5 text-gray-300 group-hover:text-[#800000] transition-colors" />
               </div>
 
-              <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+              <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-[#800000] transition-colors">
                 {dosen.nama}
               </h3>
 
@@ -181,7 +181,7 @@ export default function DosenPage() {
                     .map((bidang, i) => (
                       <span
                         key={i}
-                        className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
+                        className="px-2 py-1 bg-red-100 text-[#800000] text-xs rounded-full"
                       >
                         {bidang.trim()}
                       </span>
@@ -219,7 +219,7 @@ export default function DosenPage() {
                       <div key={i} className="flex items-center gap-2">
                         <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                            className="h-full bg-gradient-to-r from-[#800000] to-[#4a0000] rounded-full"
                             style={{ width: `${k.tingkat}%` }}
                           />
                         </div>

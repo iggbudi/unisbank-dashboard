@@ -54,7 +54,7 @@ interface AlignmentData {
 }
 
 const FACTOR_COLORS: Record<string, string> = {
-  paper_relevance: "bg-blue-500",
+  paper_relevance: "bg-red-500",
   kompetensi_bonus: "bg-orange-500",
   depth: "bg-pink-500",
 };
@@ -167,7 +167,7 @@ export default function AnalisisPage() {
       </div>
 
       {/* Overall Score */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-4 sm:p-6 text-white">
+      <div className="bg-gradient-to-r from-[#800000] to-[#4a0000] rounded-2xl p-4 sm:p-6 text-white">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold mb-1">
@@ -192,7 +192,7 @@ export default function AnalisisPage() {
           className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition"
         >
           <div className="flex items-center gap-2">
-            <Info className="w-5 h-5 text-blue-600" />
+            <Info className="w-5 h-5 text-[#800000]" />
             <span className="font-semibold text-gray-900">Formula Perhitungan</span>
           </div>
           {showFormula ? (
@@ -330,7 +330,7 @@ export default function AnalisisPage() {
               onClick={() => setSortBy("score")}
               className={`px-3 py-1 text-sm rounded-lg ${
                 sortBy === "score"
-                  ? "bg-blue-100 text-blue-700"
+                  ? "bg-red-100 text-[#800000]"
                   : "bg-gray-100 text-gray-600"
               }`}
             >
@@ -340,7 +340,7 @@ export default function AnalisisPage() {
               onClick={() => setSortBy("nama")}
               className={`px-3 py-1 text-sm rounded-lg ${
                 sortBy === "nama"
-                  ? "bg-blue-100 text-blue-700"
+                  ? "bg-red-100 text-[#800000]"
                   : "bg-gray-100 text-gray-600"
               }`}
             >

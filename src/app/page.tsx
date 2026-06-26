@@ -34,14 +34,14 @@ interface SummaryData {
 }
 
 const CHART_COLORS = [
-  "#3b82f6",
-  "#8b5cf6",
-  "#ec4899",
-  "#6366f1",
-  "#06b6d4",
-  "#14b8a6",
-  "#22c55e",
-  "#eab308",
+  "#800000",
+  "#5c0000",
+  "#a52a2a",
+  "#b22222",
+  "#4a0000",
+  "#6b0000",
+  "#8b0000",
+  "#cd5c5c",
 ];
 
 export default function DashboardPage() {
@@ -72,10 +72,10 @@ export default function DashboardPage() {
   if (error || !summary) return <ErrorState onRetry={fetchData} />;
 
   const stats = [
-    { label: "Total Dosen", value: summary.total_dosen, icon: Users, color: "bg-blue-500" },
-    { label: "Total Sitasi", value: summary.total_sitasi.toLocaleString(), icon: BookOpen, color: "bg-purple-500" },
-    { label: "Rata-rata h-index", value: summary.avg_h_index, icon: TrendingUp, color: "bg-green-500" },
-    { label: "Rata-rata i10-index", value: summary.avg_i10_index, icon: Award, color: "bg-orange-500" },
+    { label: "Total Dosen", value: summary.total_dosen, icon: Users, color: "bg-[#800000]" },
+    { label: "Total Sitasi", value: summary.total_sitasi.toLocaleString(), icon: BookOpen, color: "bg-[#5c0000]" },
+    { label: "Rata-rata h-index", value: summary.avg_h_index, icon: TrendingUp, color: "bg-[#a52a2a]" },
+    { label: "Rata-rata i10-index", value: summary.avg_i10_index, icon: Award, color: "bg-[#b22222]" },
   ];
 
   const chartData = summary.distribusi_kompetensi.slice(0, 8).map((item) => ({
@@ -86,7 +86,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
       {/* Visi-Misi Card */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-white">
+      <div className="bg-gradient-to-r from-[#800000] to-[#4a0000] rounded-xl sm:rounded-2xl p-4 sm:p-6 text-white">
         <h2 className="text-base sm:text-xl font-bold mb-2">🎯 Visi Program Studi</h2>
         <p className="text-blue-100 leading-relaxed">
           Pada tahun 2035 menjadi program studi unggul, mandiri dan profesional
@@ -119,7 +119,7 @@ export default function DashboardPage() {
         <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-base sm:text-lg font-semibold text-gray-900">🏆 Top 5 Dosen</h3>
-            <Link href="/dosen" className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
+            <Link href="/dosen" className="text-sm text-[#800000] hover:text-[#5c0000] flex items-center gap-1">
               Lihat Semua <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -173,18 +173,18 @@ export default function DashboardPage() {
       <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
         <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">🔍 Eksplorasi</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-          <Link href="/dosen" className="p-4 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all text-center">
-            <Users className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+          <Link href="/dosen" className="p-4 border-2 border-gray-200 rounded-xl hover:border-[#800000] hover:bg-red-50 transition-all text-center">
+            <Users className="w-8 h-8 text-[#800000] mx-auto mb-2" />
             <p className="font-medium text-gray-900">Lihat Semua Dosen</p>
             <p className="text-xs sm:text-sm text-gray-500">Profil lengkap {summary.total_dosen} dosen</p>
           </Link>
-          <Link href="/analisis" className="p-4 border-2 border-gray-200 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition-all text-center">
-            <TrendingUp className="w-8 h-8 text-purple-500 mx-auto mb-2" />
+          <Link href="/analisis" className="p-4 border-2 border-gray-200 rounded-xl hover:border-[#800000] hover:bg-red-50 transition-all text-center">
+            <TrendingUp className="w-8 h-8 text-[#800000] mx-auto mb-2" />
             <p className="font-medium text-gray-900">Analisis Kesesuaian</p>
             <p className="text-xs sm:text-sm text-gray-500">Kompetensi vs Visi-Misi</p>
           </Link>
-          <Link href="/" className="p-4 border-2 border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-all text-center">
-            <Award className="w-8 h-8 text-green-500 mx-auto mb-2" />
+          <Link href="/" className="p-4 border-2 border-gray-200 rounded-xl hover:border-[#800000] hover:bg-red-50 transition-all text-center">
+            <Award className="w-8 h-8 text-[#800000] mx-auto mb-2" />
             <p className="font-medium text-gray-900">Metrik Program Studi</p>
             <p className="text-xs sm:text-sm text-gray-500">Ringkasan pencapaian</p>
           </Link>

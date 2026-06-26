@@ -54,7 +54,7 @@ export default function AdminMatkulPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari mata kuliah..." className="w-full pl-9 pr-4 py-2 border rounded-lg text-sm" />
         </div>
-        <button onClick={openAdd} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">
+        <button onClick={openAdd} className="flex items-center gap-2 px-4 py-2 bg-[#800000] text-white rounded-lg text-sm hover:bg-[#5c0000]">
           <Plus className="w-4 h-4" /> Tambah
         </button>
       </div>
@@ -75,7 +75,7 @@ export default function AdminMatkulPage() {
                 <td className="px-4 py-3 text-gray-600">{m.dosen_count} dosen</td>
                 <td className="px-4 py-3">
                   <div className="flex gap-2">
-                    <button onClick={() => openEdit(m)} className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded"><Pencil className="w-4 h-4" /></button>
+                    <button onClick={() => openEdit(m)} className="p-1.5 text-gray-500 hover:text-[#800000] hover:bg-red-50 rounded"><Pencil className="w-4 h-4" /></button>
                     <button onClick={() => handleDelete(m.id, m.nama, m.dosen_count)} className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"><Trash2 className="w-4 h-4" /></button>
                   </div>
                 </td>
@@ -99,7 +99,7 @@ export default function AdminMatkulPage() {
             </div>
             <div className="flex justify-end gap-3 mt-6">
               <button onClick={() => setModal(null)} className="px-4 py-2 text-sm text-gray-700 border rounded-lg hover:bg-gray-50">Batal</button>
-              <button onClick={handleSave} disabled={loading || !formNama} className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">{loading ? "Menyimpan..." : "Simpan"}</button>
+              <button onClick={handleSave} disabled={loading || !formNama} className="px-4 py-2 text-sm bg-[#800000] text-white rounded-lg hover:bg-[#5c0000] disabled:opacity-50">{loading ? "Menyimpan..." : "Simpan"}</button>
             </div>
           </div>
         </div>

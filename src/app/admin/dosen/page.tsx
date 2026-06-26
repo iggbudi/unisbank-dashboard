@@ -86,7 +86,7 @@ export default function AdminDosenPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari dosen..." className="w-full pl-9 pr-4 py-2 border rounded-lg text-sm" />
         </div>
-        <button onClick={openAdd} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">
+        <button onClick={openAdd} className="flex items-center gap-2 px-4 py-2 bg-[#800000] text-white rounded-lg text-sm hover:bg-[#5c0000]">
           <Plus className="w-4 h-4" /> Tambah
         </button>
       </div>
@@ -113,7 +113,7 @@ export default function AdminDosenPage() {
                 <td className="px-4 py-3">{d.h_index || 0}</td>
                 <td className="px-4 py-3">
                   <div className="flex gap-1">
-                    <button onClick={() => openEdit(d)} className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded" title="Edit"><Pencil className="w-4 h-4" /></button>
+                    <button onClick={() => openEdit(d)} className="p-1.5 text-gray-500 hover:text-[#800000] hover:bg-red-50 rounded" title="Edit"><Pencil className="w-4 h-4" /></button>
                     <button onClick={() => handleSync(d.id, "publikasi")} disabled={syncing === d.id} className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded disabled:opacity-50" title="Sync publikasi dari Scholar"><RefreshCw className={`w-4 h-4 ${syncing === d.id ? "animate-spin" : ""}`} /></button>
                     <button onClick={() => handleDelete(d.id)} className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded" title="Hapus"><Trash2 className="w-4 h-4" /></button>
                   </div>
@@ -152,7 +152,7 @@ export default function AdminDosenPage() {
             </div>
             <div className="flex justify-end gap-3 mt-6">
               <button onClick={() => setModal(null)} className="px-4 py-2 text-sm text-gray-700 border rounded-lg hover:bg-gray-50">Batal</button>
-              <button onClick={handleSave} disabled={loading || !form.nama} className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">{loading ? "Menyimpan..." : "Simpan"}</button>
+              <button onClick={handleSave} disabled={loading || !form.nama} className="px-4 py-2 text-sm bg-[#800000] text-white rounded-lg hover:bg-[#5c0000] disabled:opacity-50">{loading ? "Menyimpan..." : "Simpan"}</button>
             </div>
           </div>
         </div>

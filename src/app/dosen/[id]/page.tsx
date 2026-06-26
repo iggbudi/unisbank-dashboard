@@ -68,7 +68,7 @@ export default function DosenDetailPage() {
     return (
       <div className="text-center py-12">
         <p className="text-red-600">Dosen tidak ditemukan</p>
-        <Link href="/dosen" className="text-blue-600 hover:underline mt-4 inline-block">
+        <Link href="/dosen" className="text-[#800000] hover:underline mt-4 inline-block">
           Kembali ke daftar dosen
         </Link>
       </div>
@@ -89,7 +89,7 @@ export default function DosenDetailPage() {
       {/* Profile Header */}
       <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
         <div className="flex flex-col md:flex-row items-start gap-3 sm:gap-4 sm:p-6">
-          <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-3xl flex-shrink-0">
+          <div className="w-24 h-24 bg-gradient-to-br from-[#800000] to-[#4a0000] rounded-full flex items-center justify-center text-white font-bold text-3xl flex-shrink-0">
             {dosen.nama
               .split(" ")
               .map((n) => n[0])
@@ -108,7 +108,7 @@ export default function DosenDetailPage() {
               {dosen.bidang_keahlian.split(",").map((bidang, i) => (
                 <span
                   key={i}
-                  className="px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-full"
+                  className="px-3 py-1 bg-red-100 text-[#800000] text-sm rounded-full"
                 >
                   {bidang.trim()}
                 </span>
@@ -118,7 +118,7 @@ export default function DosenDetailPage() {
               href={`https://scholar.google.co.id/citations?user=${dosen.google_scholar_id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center text-blue-600 hover:text-blue-800"
+              className="inline-flex items-center text-[#800000] hover:text-blue-800"
             >
               Google Scholar <ExternalLink className="w-4 h-4 ml-1" />
             </a>
@@ -129,13 +129,13 @@ export default function DosenDetailPage() {
       {/* Metrics Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-xl shadow-sm p-4 text-center">
-          <p className="text-3xl font-bold text-blue-600">
+          <p className="text-3xl font-bold text-[#800000]">
             {dosen.total_sitasi?.toLocaleString() || 0}
           </p>
           <p className="text-sm text-gray-500">Total Sitasi</p>
         </div>
         <div className="bg-white rounded-xl shadow-sm p-4 text-center">
-          <p className="text-3xl font-bold text-purple-600">
+          <p className="text-3xl font-bold text-[#800000]">
             {dosen.h_index || 0}
           </p>
           <p className="text-sm text-gray-500">h-index</p>
@@ -239,7 +239,7 @@ export default function DosenDetailPage() {
               <Line
                 type="monotone"
                 dataKey="sitasi"
-                stroke="#6366f1"
+                stroke="#800000"
                 strokeWidth={2}
                 dot={{ r: 4 }}
                 activeDot={{ r: 6 }}
@@ -266,7 +266,7 @@ export default function DosenDetailPage() {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div
-                    className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-500"
+                    className="bg-gradient-to-r from-[#800000] to-[#4a0000] h-3 rounded-full transition-all duration-500"
                     style={{ width: `${k.tingkat}%` }}
                   ></div>
                 </div>

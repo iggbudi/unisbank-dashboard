@@ -96,7 +96,7 @@ export default function AdminPublikasiPage() {
             {dosenList.map((d) => <option key={d.id} value={d.id}>{d.nama}</option>)}
           </select>
         </div>
-        <button onClick={handleSyncAll} disabled={syncing} className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 disabled:opacity-50">
+        <button onClick={handleSyncAll} disabled={syncing} className="flex items-center gap-2 px-4 py-2 bg-[#5c0000] text-white rounded-lg text-sm hover:bg-[#4a0000] disabled:opacity-50">
           <RefreshCw className={`w-4 h-4 ${syncing ? "animate-spin" : ""}`} />
           {syncing ? "Syncing..." : "Sync Scholar"}
         </button>
@@ -124,7 +124,7 @@ export default function AdminPublikasiPage() {
                 <td className="px-4 py-3 text-gray-600 max-w-xs truncate">{p.jurnal || "-"}</td>
                 <td className="px-4 py-3">
                   <div className="flex gap-2">
-                    <button onClick={() => openEdit(p)} className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded"><Pencil className="w-4 h-4" /></button>
+                    <button onClick={() => openEdit(p)} className="p-1.5 text-gray-500 hover:text-[#800000] hover:bg-red-50 rounded"><Pencil className="w-4 h-4" /></button>
                     <button onClick={() => handleDelete(p.id)} className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"><Trash2 className="w-4 h-4" /></button>
                   </div>
                 </td>
@@ -167,7 +167,7 @@ export default function AdminPublikasiPage() {
             </div>
             <div className="flex justify-end gap-3 mt-6">
               <button onClick={() => setModal(false)} className="px-4 py-2 text-sm text-gray-700 border rounded-lg hover:bg-gray-50">Batal</button>
-              <button onClick={handleSave} disabled={loading} className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">{loading ? "Menyimpan..." : "Simpan"}</button>
+              <button onClick={handleSave} disabled={loading} className="px-4 py-2 text-sm bg-[#800000] text-white rounded-lg hover:bg-[#5c0000] disabled:opacity-50">{loading ? "Menyimpan..." : "Simpan"}</button>
             </div>
           </div>
         </div>

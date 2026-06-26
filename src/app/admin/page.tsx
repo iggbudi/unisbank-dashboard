@@ -55,10 +55,10 @@ export default function AdminDashboard() {
   }
 
   const stats = [
-    { label: "Total Dosen", value: summary.total_dosen || 0, icon: Users, color: "bg-blue-500" },
-    { label: "Total Sitasi", value: summary.total_sitasi?.toLocaleString() || 0, icon: TrendingUp, color: "bg-purple-500" },
-    { label: "Avg h-index", value: summary.avg_h_index || 0, icon: BookOpen, color: "bg-green-500" },
-    { label: "Mata Kuliah", value: counts.matkul, icon: GraduationCap, color: "bg-orange-500" },
+    { label: "Total Dosen", value: summary.total_dosen || 0, icon: Users, color: "bg-red-500" },
+    { label: "Total Sitasi", value: summary.total_sitasi?.toLocaleString() || 0, icon: TrendingUp, color: "bg-[#5c0000]" },
+    { label: "Avg h-index", value: summary.avg_h_index || 0, icon: BookOpen, color: "bg-[#a52a2a]" },
+    { label: "Mata Kuliah", value: counts.matkul, icon: GraduationCap, color: "bg-[#b22222]" },
   ];
 
   return (
