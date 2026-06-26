@@ -86,8 +86,8 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
       {/* Visi-Misi Card */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 text-white">
-        <h2 className="text-xl font-bold mb-2">🎯 Visi Program Studi</h2>
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-white">
+        <h2 className="text-base sm:text-xl font-bold mb-2">🎯 Visi Program Studi</h2>
         <p className="text-blue-100 leading-relaxed">
           Pada tahun 2035 menjadi program studi unggul, mandiri dan profesional
           dalam bidang pengembangan sistem informasi dan analisis data yang
@@ -97,16 +97,16 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         {stats.map((stat, index) => (
-          <div key={index} className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+          <div key={index} className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center gap-4">
-              <div className={`${stat.color} p-3 rounded-lg`}>
-                <stat.icon className="w-6 h-6 text-white" />
+              <div className={`${stat.color} p-2 sm:p-3 rounded-lg`}>
+                <stat.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">{stat.label}</p>
-                <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                <p className="text-xs sm:text-sm text-gray-500">{stat.label}</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-900">{stat.value}</p>
               </div>
             </div>
           </div>
@@ -116,9 +116,9 @@ export default function DashboardPage() {
       {/* Top Dosen & Distribusi Kompetensi */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Dosen */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">🏆 Top 5 Dosen</h3>
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900">🏆 Top 5 Dosen</h3>
             <Link href="/dosen" className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
               Lihat Semua <ArrowRight className="w-4 h-4" />
             </Link>
@@ -128,7 +128,7 @@ export default function DashboardPage() {
               <Link
                 key={dosen.id}
                 href={`/dosen/${dosen.id}`}
-                className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-4 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
@@ -139,7 +139,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex-1">
                   <p className="font-medium text-gray-900">{dosen.nama}</p>
-                  <p className="text-sm text-gray-500 truncate">{dosen.bidang_keahlian}</p>
+                  <p className="text-xs sm:text-sm text-gray-500 truncate">{dosen.bidang_keahlian}</p>
                 </div>
                 <div className="text-right">
                   <p className="font-semibold text-gray-900">{dosen.total_sitasi.toLocaleString()}</p>
@@ -151,9 +151,9 @@ export default function DashboardPage() {
         </div>
 
         {/* Distribusi Kompetensi — Recharts */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">📊 Distribusi Kompetensi</h3>
-          <ResponsiveContainer width="100%" height={320}>
+        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">📊 Distribusi Kompetensi</h3>
+          <ResponsiveContainer width="100%" height="100%" className="!h-[220px] sm:!h-[320px]">
             <BarChart data={chartData} layout="vertical" margin={{ left: 0, right: 20 }}>
               <CartesianGrid strokeDasharray="3 3" horizontal={false} />
               <XAxis type="number" allowDecimals={false} />
@@ -170,23 +170,23 @@ export default function DashboardPage() {
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">🔍 Eksplorasi</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">🔍 Eksplorasi</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
           <Link href="/dosen" className="p-4 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all text-center">
             <Users className="w-8 h-8 text-blue-500 mx-auto mb-2" />
             <p className="font-medium text-gray-900">Lihat Semua Dosen</p>
-            <p className="text-sm text-gray-500">Profil lengkap {summary.total_dosen} dosen</p>
+            <p className="text-xs sm:text-sm text-gray-500">Profil lengkap {summary.total_dosen} dosen</p>
           </Link>
           <Link href="/analisis" className="p-4 border-2 border-gray-200 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition-all text-center">
             <TrendingUp className="w-8 h-8 text-purple-500 mx-auto mb-2" />
             <p className="font-medium text-gray-900">Analisis Kesesuaian</p>
-            <p className="text-sm text-gray-500">Kompetensi vs Visi-Misi</p>
+            <p className="text-xs sm:text-sm text-gray-500">Kompetensi vs Visi-Misi</p>
           </Link>
           <Link href="/" className="p-4 border-2 border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-all text-center">
             <Award className="w-8 h-8 text-green-500 mx-auto mb-2" />
             <p className="font-medium text-gray-900">Metrik Program Studi</p>
-            <p className="text-sm text-gray-500">Ringkasan pencapaian</p>
+            <p className="text-xs sm:text-sm text-gray-500">Ringkasan pencapaian</p>
           </Link>
         </div>
       </div>

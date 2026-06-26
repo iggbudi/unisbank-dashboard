@@ -87,8 +87,8 @@ export default function DosenDetailPage() {
       </Link>
 
       {/* Profile Header */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <div className="flex flex-col md:flex-row items-start gap-6">
+      <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+        <div className="flex flex-col md:flex-row items-start gap-3 sm:gap-4 sm:p-6">
           <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-3xl flex-shrink-0">
             {dosen.nama
               .split(" ")
@@ -97,7 +97,7 @@ export default function DosenDetailPage() {
               .slice(0, 2)}
           </div>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
               {dosen.nama}
             </h1>
             <p className="text-gray-600 mb-1">{dosen.email}</p>
@@ -156,8 +156,8 @@ export default function DosenDetailPage() {
 
       {/* Mata Kuliah + Paper Pendukung */}
       {dosen.mata_kuliah && dosen.mata_kuliah.length > 0 && (
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-indigo-600" />
             Mata Kuliah yang Diampu
           </h2>
@@ -228,9 +228,9 @@ export default function DosenDetailPage() {
 
       {/* Tren Sitasi Chart */}
       {dosen.tren_sitasi && dosen.tren_sitasi.length > 0 && (
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">📈 Tren Sitasi per Tahun</h2>
-          <ResponsiveContainer width="100%" height={260}>
+        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">📈 Tren Sitasi per Tahun</h2>
+          <ResponsiveContainer width="100%" height="100%" className="!h-[180px] sm:!h-[260px]">
             <LineChart data={dosen.tren_sitasi} margin={{ bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="tahun" />
@@ -251,8 +251,8 @@ export default function DosenDetailPage() {
 
       {/* Kompetensi */}
       {dosen.kompetensi && dosen.kompetensi.length > 0 && (
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">
             Profil Kompetensi
           </h2>
           <div className="space-y-4">

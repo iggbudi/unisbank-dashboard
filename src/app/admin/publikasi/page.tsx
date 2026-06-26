@@ -133,14 +133,14 @@ export default function AdminPublikasiPage() {
           </tbody>
         </table>
         {filtered.length > 100 && (
-          <p className="px-4 py-3 text-sm text-gray-500 text-center">Menampilkan 100 dari {filtered.length} publikasi. Gunakan filter untuk menyempitkan.</p>
+          <p className="px-4 py-3 text-xs sm:text-sm text-gray-500 text-center">Menampilkan 100 dari {filtered.length} publikasi. Gunakan filter untuk menyempitkan.</p>
         )}
       </div>
 
       {/* Modal */}
       {modal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-lg w-full max-w-lg p-6">
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-lg p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-lg">Edit Publikasi</h3>
               <button onClick={() => setModal(false)} className="text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>

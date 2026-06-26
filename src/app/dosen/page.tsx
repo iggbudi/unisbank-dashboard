@@ -97,7 +97,7 @@ export default function DosenPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
           Daftar Dosen Prodi SI
         </h1>
         <p className="text-gray-600">
@@ -154,12 +154,12 @@ export default function DosenPage() {
           Tidak ada dosen yang cocok
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 sm:p-6">
           {filteredDosen.map((dosen) => (
             <Link
               key={dosen.id}
               href={`/dosen/${dosen.id}`}
-              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6 group"
+              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-4 sm:p-6 group"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white font-bold text-lg">
@@ -192,19 +192,19 @@ export default function DosenPage() {
               {/* Metrics */}
               <div className="grid grid-cols-3 gap-2 mb-4">
                 <div className="text-center p-2 bg-gray-50 rounded-lg">
-                  <p className="text-lg font-bold text-gray-900">
+                  <p className="text-base sm:text-lg font-bold text-gray-900">
                     {dosen.total_sitasi?.toLocaleString() || 0}
                   </p>
                   <p className="text-xs text-gray-500">Sitasi</p>
                 </div>
                 <div className="text-center p-2 bg-gray-50 rounded-lg">
-                  <p className="text-lg font-bold text-gray-900">
+                  <p className="text-base sm:text-lg font-bold text-gray-900">
                     {dosen.h_index || 0}
                   </p>
                   <p className="text-xs text-gray-500">h-index</p>
                 </div>
                 <div className="text-center p-2 bg-gray-50 rounded-lg">
-                  <p className="text-lg font-bold text-gray-900">
+                  <p className="text-base sm:text-lg font-bold text-gray-900">
                     {dosen.i10_index || 0}
                   </p>
                   <p className="text-xs text-gray-500">i10-index</p>

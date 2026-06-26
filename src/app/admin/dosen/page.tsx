@@ -91,7 +91,7 @@ export default function AdminDosenPage() {
         </button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 text-left">
             <tr>
@@ -127,7 +127,7 @@ export default function AdminDosenPage() {
       {/* Modal */}
       {modal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-lg">{modal === "add" ? "Tambah" : "Edit"} Dosen</h3>
               <button onClick={() => setModal(null)} className="text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>

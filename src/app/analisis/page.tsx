@@ -157,7 +157,7 @@ export default function AnalisisPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
           Analisis Kesesuaian Paper & Mata Kuliah
         </h1>
         <p className="text-gray-600">
@@ -167,7 +167,7 @@ export default function AnalisisPage() {
       </div>
 
       {/* Overall Score */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 text-white">
+      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-4 sm:p-6 text-white">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold mb-1">
@@ -224,7 +224,7 @@ export default function AnalisisPage() {
 
       {/* Legend */}
       <div className="bg-white rounded-xl shadow-sm p-4">
-        <div className="flex flex-wrap items-center gap-6 text-sm">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-4 sm:p-6 text-sm">
           <span className="font-medium text-gray-700">Keterangan Skor:</span>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 rounded bg-green-500"></div>
@@ -253,8 +253,8 @@ export default function AnalisisPage() {
       </div>
 
       {/* Matrix Table */}
-      <div className="bg-white rounded-xl shadow-sm p-6 overflow-x-auto">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+      <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 overflow-x-auto">
+        <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">
           Matrix Dosen &times; Mata Kuliah
         </h2>
         <div className="overflow-x-auto -mx-6 px-6">
@@ -320,9 +320,9 @@ export default function AnalisisPage() {
       </div>
 
       {/* Per-Dosen Detail */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
+      <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900">
             Detail per Dosen
           </h2>
           <div className="flex gap-2">

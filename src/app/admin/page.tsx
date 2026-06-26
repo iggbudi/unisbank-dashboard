@@ -34,12 +34,12 @@ export default function AdminDashboard() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard Admin</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Dashboard Admin</h1>
           <p className="text-gray-500">Memuat data...</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:p-6">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white rounded-xl shadow-sm p-6 animate-pulse">
+            <div key={i} className="bg-white rounded-xl shadow-sm p-4 sm:p-6 animate-pulse">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-gray-200 rounded-lg" />
                 <div className="space-y-2">
@@ -64,20 +64,20 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard Admin</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Dashboard Admin</h1>
         <p className="text-gray-500">Kelola data dosen, mata kuliah, dan publikasi</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:p-6">
         {stats.map((stat) => (
-          <div key={stat.label} className="bg-white rounded-xl shadow-sm p-6">
+          <div key={stat.label} className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
             <div className="flex items-center gap-4">
               <div className={`${stat.color} p-3 rounded-lg`}>
                 <stat.icon className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">{stat.label}</p>
-                <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                <p className="text-xs sm:text-sm text-gray-500">{stat.label}</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900">{stat.value}</p>
               </div>
             </div>
           </div>
