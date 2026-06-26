@@ -5,6 +5,7 @@ import { Menu, X } from "lucide-react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import BottomNav from "./components/bottom-nav";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -67,18 +68,19 @@ export default function RootLayout({
           </header>
 
           {/* Main Content */}
-          <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+          <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-8 pb-20 sm:pb-8">
             {children}
           </main>
 
           {/* Footer */}
-          <footer className="bg-white border-t mt-auto">
+          <footer className="bg-white border-t mt-auto hidden sm:block">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
               <p className="text-center text-xs sm:text-sm text-gray-500">
                 © 2024 Prodi SI - Universitas Stikubank
               </p>
             </div>
           </footer>
+        <BottomNav />
         </div>
         <script dangerouslySetInnerHTML={{ __html: `
           if ('serviceWorker' in navigator) {
