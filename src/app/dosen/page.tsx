@@ -118,7 +118,7 @@ export default function DosenPage() {
             >
               {/* Header: avatar + nama + arrow */}
               <div className="flex items-start gap-3 mb-2">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#800000] to-[#4a0000] rounded-xl flex items-center justify-center text-white font-bold text-base sm:text-lg shrink-0">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#800000] to-[#D4AF37] rounded-xl flex items-center justify-center text-white font-bold text-base sm:text-lg shrink-0">
                   {dosen.nama.charAt(0)}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -159,7 +159,7 @@ export default function DosenPage() {
                     {dosen.kompetensi.slice(0, 2).map((k, i) => (
                       <div key={i} className="flex items-center gap-2">
                         <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                          <div className="h-full bg-gradient-to-r from-[#800000] to-[#4a0000] rounded-full" style={{ width: `${k.tingkat}%` }} />
+                          <div className="h-full bg-gradient-to-r from-[#800000] to-[#D4AF37] rounded-full" style={{ width: `${k.tingkat}%` }} />
                         </div>
                         <span className="text-[9px] sm:text-xs text-gray-500 w-16 sm:w-24 truncate">{k.bidang}</span>
                       </div>

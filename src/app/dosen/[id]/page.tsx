@@ -89,7 +89,7 @@ export default function DosenDetailPage() {
       {/* Profile Header */}
       <div className="bg-white rounded-xl shadow-sm p-2 sm:p-4 sm:p-6">
         <div className="flex flex-col md:flex-row items-start gap-3 sm:gap-2 sm:gap-2 sm:p-4 sm:p-6">
-          <div className="w-24 h-24 bg-gradient-to-br from-[#800000] to-[#4a0000] rounded-full flex items-center justify-center text-white font-bold text-3xl flex-shrink-0">
+          <div className="w-24 h-24 bg-gradient-to-br from-[#800000] to-[#D4AF37] rounded-full flex items-center justify-center text-white font-bold text-3xl flex-shrink-0">
             {dosen.nama
               .split(" ")
               .map((n) => n[0])
@@ -266,7 +266,7 @@ export default function DosenDetailPage() {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div
-                    className="bg-gradient-to-r from-[#800000] to-[#4a0000] h-3 rounded-full transition-all duration-500"
+                    className="bg-gradient-to-r from-[#800000] to-[#D4AF37] h-3 rounded-full transition-all duration-500"
                     style={{ width: `${k.tingkat}%` }}
                   ></div>
                 </div>

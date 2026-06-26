@@ -167,7 +167,7 @@ export default function AnalisisPage() {
       </div>
 
       {/* Overall Score */}
-      <div className="bg-gradient-to-r from-[#800000] to-[#4a0000] rounded-2xl p-4 sm:p-6 text-white">
+      <div className="bg-gradient-to-r from-[#800000] to-[#D4AF37] rounded-2xl p-4 sm:p-6 text-white">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold mb-1">

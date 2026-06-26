@@ -33,7 +33,7 @@ interface SummaryData {
   }>;
 }
 
-const MAROON_SHADES = ["#800000", "#5c0000", "#a52a2a", "#b22222", "#4a0000", "#6b0000", "#8b0000", "#cd5c5c"];
+const MAROON_SHADES = ["#800000", "#D4AF37", "#a52a2a", "#B8960C", "#4a0000", "#6b0000", "#8b0000", "#cd5c5c"];
 
 export default function DashboardPage() {
   const [summary, setSummary] = useState<SummaryData | null>(null);
@@ -56,9 +56,9 @@ export default function DashboardPage() {
 
   const stats = [
     { label: "Dosen", value: summary.total_dosen, icon: Users, color: "bg-[#800000]" },
-    { label: "Sitasi", value: summary.total_sitasi.toLocaleString(), icon: BookOpen, color: "bg-[#5c0000]" },
+    { label: "Sitasi", value: summary.total_sitasi.toLocaleString(), icon: BookOpen, color: "bg-[#D4AF37]" },
     { label: "h-index", value: summary.avg_h_index, icon: TrendingUp, color: "bg-[#a52a2a]" },
-    { label: "i10-index", value: summary.avg_i10_index, icon: Award, color: "bg-[#b22222]" },
+    { label: "i10-index", value: summary.avg_i10_index, icon: Award, color: "bg-[#B8960C]" },
   ];
 
   const chartData = summary.distribusi_kompetensi.slice(0, 6).map((item) => ({
@@ -110,7 +110,7 @@ export default function DashboardPage() {
             >
               <div
                 className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-white text-xs sm:text-sm shrink-0 ${
-                  index === 0 ? "bg-yellow-500" : index === 1 ? "bg-gray-400" : "bg-orange-400"
+                  index === 0 ? "bg-[#D4AF37]" : index === 1 ? "bg-gray-400" : "bg-orange-400"
                 }`}
               >
                 {index + 1}

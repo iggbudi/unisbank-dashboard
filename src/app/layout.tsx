@@ -34,7 +34,7 @@ export default function RootLayout({
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-center py-3 sm:py-4">
                 <a href="/" className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-[#800000] to-[#4a0000] rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-[#800000] to-[#D4AF37] rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold text-lg sm:text-xl">SI</span>
                   </div>
                   <div>

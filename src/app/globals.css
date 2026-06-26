@@ -10,6 +10,9 @@
   --maroon-lighter: #fdf2f2;
   --accent: #a52a2a;
   --accent-warm: #b22222;
+  --gold: #D4AF37;
+  --gold-light: #F5E6CC;
+  --gold-dark: #B8960C;
 }
 
 @theme inline {

@@ -63,7 +63,7 @@ export default function AdminLayout({
       >
         <div className="flex items-center justify-between h-16 px-6 border-b">
           <Link href="/admin" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-[#800000] to-[#4a0000] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-[#800000] to-[#D4AF37] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">SI</span>
             </div>
             <span className="font-bold text-gray-900">Admin</span>
