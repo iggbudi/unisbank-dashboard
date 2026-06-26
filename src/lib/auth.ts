@@ -4,12 +4,11 @@
 
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
+import crypto from "crypto";
 
 const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
-// Simple HMAC-based session token
 function hmac(data: string, secret: string): string {
-  const crypto = require("crypto");
   return crypto.createHmac("sha256", secret).update(data).digest("hex");
 }
 

@@ -1,20 +1,31 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-function verifyToken(token: string): boolean {
+async function hmacSha256(data: string, secret: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(data));
+  return Array.from(new Uint8Array(signature))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+async function verifyToken(token: string): Promise<boolean> {
   const secret = process.env.SESSION_SECRET;
   if (!secret) return false;
 
-  const crypto = require("crypto");
   const parts = token.split(":");
   if (parts.length !== 3) return false;
 
   const [username, expiresStr, signature] = parts;
   const payload = `${username}:${expiresStr}`;
-  const expectedSig = crypto
-    .createHmac("sha256", secret)
-    .update(payload)
-    .digest("hex");
+  const expectedSig = await hmacSha256(payload, secret);
 
   if (signature !== expectedSig) return false;
   if (Date.now() > parseInt(expiresStr)) return false;
@@ -22,14 +33,13 @@ function verifyToken(token: string): boolean {
   return true;
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Public admin paths
   if (pathname === "/admin/login") {
-    // If already logged in, redirect to admin dashboard
     const session = request.cookies.get("session")?.value;
-    if (session && verifyToken(session)) {
+    if (session && (await verifyToken(session))) {
       return NextResponse.redirect(new URL("/admin", request.url));
     }
     return NextResponse.next();
@@ -38,7 +48,7 @@ export function middleware(request: NextRequest) {
   // Protected admin paths
   if (pathname.startsWith("/admin")) {
     const session = request.cookies.get("session")?.value;
-    if (!session || !verifyToken(session)) {
+    if (!session || !(await verifyToken(session))) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
   }
@@ -46,13 +56,12 @@ export function middleware(request: NextRequest) {
   // Protect admin API with origin check
   if (pathname.startsWith("/api/admin")) {
     const session = request.cookies.get("session")?.value;
-    if (!session || !verifyToken(session)) {
+    if (!session || !(await verifyToken(session))) {
       return NextResponse.json(
         { success: false, error: "Unauthorized" },
         { status: 401 }
       );
     }
-    // CSRF: origin check
     const origin = request.headers.get("origin");
     const host = request.headers.get("host");
     if (origin && host && !origin.includes(host)) {
