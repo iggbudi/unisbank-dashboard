@@ -134,4 +134,14 @@ Berdasarkan kelebihan yang ada, profil lulusan SI Unisbank dapat difokuskan pada
 
 ---
 
-*Sumber data: crawl kurikulum UI Fasilkom, ITS Surabaya, BINUS University, Telkom University; serta data publikasi Google Scholar dosen SI Unisbank.*
+## Sumber Data
+
+| Kampus | URL Sumber |
+|---|---|
+| Universitas Indonesia (Fasilkom UI) | https://cs.ui.ac.id/sarjana-sistem-informasi/ |
+| ITS Surabaya | https://www.its.ac.id/si/program-studi-s1/ |
+| BINUS University | https://sis.binus.ac.id/information-systems/curriculum/course-structure/ |
+| Telkom University | https://smb.telkomuniversity.ac.id/program/s1-sistem-informasi/ |
+| Google Scholar dosen Unisbank | https://scholar.google.com/citations (profil masing-masing dosen) |
+
+*Data diambil pada 30 Juni 2026 melalui Firecrawl.*
